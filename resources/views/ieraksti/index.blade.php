@@ -6,16 +6,14 @@
     <h1 class="mb-4">Ieraksti</h1>
 
     @if ($ieraksti->count())
-        <div class="row">
+        <div class="d-flex flex-column align-items-center gap-4">
             @foreach ($ieraksti as $ieraksts)
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <x-ieraksti-card :ieraksts="$ieraksts" />
-                </div>
+                <x-ieraksti-card :ieraksti="$ieraksts" />
             @endforeach
         </div>
 
         {{-- Lapotājs --}}
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center mt-4">
             {{ $ieraksti->links() }}
         </div>
     @else

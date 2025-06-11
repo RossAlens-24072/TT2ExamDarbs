@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Komentari extends Model
 {
+    protected $table = 'komentari';
+    protected $fillable = ['ieraksti_id', 'content', 'user_id', 'parent_komentari_id'];
+
     public function user()
     {
         return $this->belongsTo(User::class);

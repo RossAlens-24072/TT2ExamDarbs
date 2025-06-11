@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ieraksti;
+use App\Models\Tema;
 use Illuminate\Http\Request;
 
 class IerakstiController extends Controller
@@ -22,9 +23,10 @@ class IerakstiController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request, Ieraksti $ieraksti)
     {
-        //
+        $temas = Tema::all();
+        return view('ieraksti.create', compact('temas'));
     }
 
     /**
@@ -32,15 +34,18 @@ class IerakstiController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-        'title' => 'required|max:100',
-        'content' => 'required',
-        'tema_id' => 'required|exists:temas,id',
+        $request->validate([
+            'title' => 'required|max:100',
+            'content' => 'required',
+            'tema_id' => 'required|exists:temas,id',
         ]);
 
-        $validated['user_id'] = auth()->id();
-
-        \App\Models\Ieraksti::create($validated);
+        Ieraksti::create([
+            'title'=> $request->title,
+            'content'=> $request->content,
+            'tema_id'=> $request->tema_id,
+            'user_id' => 1,
+        ]);
 
         return redirect()->route('ieraksti.index')->with('success', 'Ieraksts pievienots!');
     }
@@ -50,8 +55,11 @@ class IerakstiController extends Controller
      */
     public function show(string $id)
     {
-        $ieraksts = \App\Models\Ieraksti::with(['user', 'tema', 'komentari'])->findOrFail($id);
+        // $ieraksts = \App\Models\Ieraksti::with(['user', 'tema', 'komentari'])->findOrFail($id);
 
+        // return view('ieraksti.show', compact('ieraksts'));
+
+        $ieraksts = Ieraksti::with(['user', 'tema', 'komentari'])->findOrFail($id);
         return view('ieraksti.show', compact('ieraksts'));
     }
 
@@ -60,7 +68,10 @@ class IerakstiController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $ieraksts = Ieraksti::findOrFail($id);
+        $temas = Tema::all();
+
+        return view('ieraksti.edit',compact('ieraksts', 'temas'));
     }
 
     /**
@@ -68,21 +79,30 @@ class IerakstiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:100',
+            'content' => 'required',
+            'tema_id' => 'required|exists:temas,id',
+        ]);
+
+        $ieraksts = Ieraksti::findOrFail($id);
+
+        $ieraksts->update($request->all());
+
+        return redirect()->route('ieraksti.show', $ieraksts->id)->with('success', 'Ieraksts atjaunots veiksmīgi!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, Ieraksti $ieraksti)
     {
-        $ieraksts = \App\Models\Ieraksti::findOrFail($id);
 
-        if (auth()->id() !== $ieraksts->user_id && !auth()->user()->isAdmin()) {
+        if ($request->user()->cannot('delete', $ieraksti)) {
             abort(403, 'Jums nav atļaujas dzēst šo ierakstu.');
         }
 
-        $ieraksts->delete();
+        $ieraksti->delete();
 
         return redirect()->route('ieraksti.index')->with('success', 'Ieraksts dzēsts!');
     }
