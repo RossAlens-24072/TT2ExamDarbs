@@ -8,7 +8,7 @@ class Ieraksti extends Model
 {
     protected $table = 'ieraksti';
 
-    protected $fillable = ['title', 'content', 'tema_id', 'user_id'];
+    protected $fillable = ['title', 'content', 'tema_id', 'user_id', 'bilde'];
 
     public function user()
     {

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ieraksti;
+use Illuminate\Routing\Controller;
 use App\Models\Tema;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IerakstiController extends Controller
 {
@@ -38,13 +40,27 @@ class IerakstiController extends Controller
             'title' => 'required|max:100',
             'content' => 'required',
             'tema_id' => 'required|exists:temas,id',
+            'bilde'=> 'nullable|image|mimes:jpeg,png,jpg,gif|max:9048',
+        ],[
+            'title.required' => 'Lūdzu, ievadi ieraksta nosaukumu.',
+            'title.max' => 'Nosaukums nedrīkst pārsniegt 100 simbolus.',
+            'content.required' => 'Lūdzu, aizpildi aprakstu.',
+            'tema_id.required' => 'Lūdzu, izvēlies tēmu.',
+            'tema_id.exists' => 'Izvēlētā tēma neeksistē.',
         ]);
+
+        $imagePath = null;
+
+        if ($request->hasFile('bilde')) {
+            $imagePath = $request->file('bilde')->store('ieraksti_bildes', 'public');
+        }
 
         Ieraksti::create([
             'title'=> $request->title,
             'content'=> $request->content,
             'tema_id'=> $request->tema_id,
-            'user_id' => 1,
+            'user_id' => Auth::id(),
+            'bilde' => $imagePath,
         ]);
 
         return redirect()->route('ieraksti.index')->with('success', 'Ieraksts pievienots!');
@@ -71,6 +87,10 @@ class IerakstiController extends Controller
         $ieraksts = Ieraksti::findOrFail($id);
         $temas = Tema::all();
 
+        if (Auth::id() !== $ieraksts->user_id) {
+            abort(403, 'Jums nav atļaujas rediģēt šo ierakstu.');
+        }
+
         return view('ieraksti.edit',compact('ieraksts', 'temas'));
     }
 
@@ -78,19 +98,43 @@ class IerakstiController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'title' => 'required|max:100',
-            'content' => 'required',
-            'tema_id' => 'required|exists:temas,id',
-        ]);
+{
+    $request->validate([
+        'title' => 'nullable|max:100',
+        'content' => 'nullable',
+        'tema_id' => 'nullable|exists:temas,id',
+        'bilde'=> 'nullable|image|mimes:jpeg,png,jpg,gif|max:9048',
+    ]);
 
-        $ieraksts = Ieraksti::findOrFail($id);
+    $ieraksts = Ieraksti::findOrFail($id);
 
-        $ieraksts->update($request->all());
-
-        return redirect()->route('ieraksti.show', $ieraksts->id)->with('success', 'Ieraksts atjaunots veiksmīgi!');
+    if (Auth::id() !== $ieraksts->user_id) {
+        abort(403, 'Jums nav atļaujas rediģēt šo ierakstu.');
     }
+
+    $data = [];
+
+    if ($request->filled('title')) {
+        $data['title'] = $request->title;
+    }
+
+    if ($request->filled('content')) {
+        $data['content'] = $request->content;
+    }
+
+    if ($request->filled('tema_id')) {
+        $data['tema_id'] = $request->tema_id;
+    }
+
+    if ($request->hasFile('bilde')) {
+        $data['bilde'] = $request->file('bilde')->store('ieraksti_bildes', 'public');
+    }
+
+    $ieraksts->update($data);
+
+    return redirect()->route('ieraksti.show', $ieraksts->id)->with('success', 'Ieraksts atjaunots veiksmīgi!');
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -105,5 +149,14 @@ class IerakstiController extends Controller
         $ieraksti->delete();
 
         return redirect()->route('ieraksti.index')->with('success', 'Ieraksts dzēsts!');
+
+        // $ieraksti->delete();
+        // return redirect()->route('ieraksti.index')->with('success', 'Ieraksts izdzēsts');
+    }
+
+    public function __construct()
+    {
+        // Tikai autorizēti lietotāji var veidot, rediģēt un dzēst ierakstus
+        $this->middleware('auth')->except(['index', 'show']);
     }
 }

@@ -6,9 +6,16 @@
     <h1 class="mb-4">{{$ieraksts->title}}</h1>
 
     <div class="mb-3">
+        @if($ieraksts->bilde)
+        <img src="{{ asset('storage/' . $ieraksts->bilde) }}" alt="Ieraksta bilde" width="949px" height="auto" >
+        @endif
+    </div>
+
+    <div class="mb-3">
         <strong>Apraksts:</strong>
         {{$ieraksts->content}}
     </div>
+
     <div class="mb-3">
         <strong>Tēma:</strong>
         <br>{{$ieraksts->tema->title}}
@@ -53,5 +60,11 @@
     <a href="{{route('ieraksti.edit', $ieraksts->id)}} " class="btn btn-primary">Rediģēt ierakstu</a>
 
     <!-- Dzēšana -->
+    <form action="{{ route('ieraksti.destroy', $ieraksts) }}" method="POST" class="d-inline">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger">Dzēst ierakstu</button>
+    </form>
+
 
 </x-layout>

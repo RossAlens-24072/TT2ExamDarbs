@@ -3,6 +3,7 @@
 use App\Models\Ieraksti;
 use App\Http\Controllers\IerakstiController;
 use App\Http\Controllers\KomentariController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -12,3 +13,14 @@ Route::get('/', function () {
 Route::resource('ieraksti', IerakstiController::class);
 
 Route::post('komentari', [KomentariController::class, 'store'])->name('komentari.store');
+
+// reģistrēšanās
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+
+// pieslēgšanās
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+
+// izrakstīšanās
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

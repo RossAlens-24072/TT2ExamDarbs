@@ -1,13 +1,22 @@
-<nav class="bg-gray-200 justify-center">
+<nav class="bg-gray-200">
     <div class="container mx-auto flex justify-center items-center space-x-6 py-4">
-        <a href="{{ route('ieraksti.index') }}">Vajadzēs logo</a>
+        <a href="{{ route('ieraksti.index') }}" class="text-gray-700 hover:underline">Vajadzēs logo</a>
 
-        <a href="{{ route('ieraksti.create') }}">Izveidot ierakstu</a>
+        <a href="{{ route('ieraksti.create') }}" class="text-gray-700 hover:underline">Izveidot ierakstu</a>
 
-        <a href="">Reģistrēties</a>
+        <a href="{{ route('register') }}" class="text-gray-700 hover:underline">Reģistrēties</a>
 
-        <a href="">Ienākt</a>
+        <a href="{{ route('login') }}" class="text-gray-700 hover:underline">Ienākt</a>
 
-        <a href="">Tavs profils</a>
+        @auth
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="text-gray-700 hover:underline focus:outline-none">
+                    Izrakstīties
+                </button>
+            </form>
+        @endauth
+
+        <a href="#" class="text-gray-700 hover:underline">Tavs profils</a>
     </div>
 </nav>

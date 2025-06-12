@@ -5,7 +5,7 @@
     
     <h1 class="mb-4">Ieraksta Rediģēšana</h1>
 
-    <form method="POST" action="{{route('ieraksti.update', $ieraksts->id) }}">
+    <form method="POST" action="{{route('ieraksti.update', $ieraksts->id) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -21,7 +21,8 @@
 
         <div class="mb-3">
             <label class="form-label">Pievienot attēlu:</label>
-            <input type="text" name="bilde" class="form-control">
+            <input type="file" name="bilde" class="form-control">
+            @error('bilde')<div class="text-red-600 text-sm mt-1">{{ $message }}</div>@enderror
         </div>
 
         <div class="mb-3">

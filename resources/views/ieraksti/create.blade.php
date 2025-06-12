@@ -4,7 +4,23 @@
     </x-slot>
 
     <h1 class="mb-4"> Izveidot Jaunu Ierakstu</h1>
-    <form method="POST" action="{{route('ieraksti.store') }}">
+
+    <div class="pb-8">
+        @if ($errors->any())
+            <div class="bg-red-500 text-white font-bold">
+                Something went wrong....
+            </div>
+            <ul class="border border-t-0 border-red-400">
+                @foreach ($errors->all() as $error)
+                    <li>
+                        {{ $error }}
+                    </li>
+                @endforeach
+            </ul>
+        @endif()
+    </div>
+
+    <form method="POST" action="{{route('ieraksti.store') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="mb-3">
@@ -19,7 +35,8 @@
 
         <div class="mb-3">
             <label class="form-label">Pievienot attēlu:</label>
-            <input type="text" name="bilde" class="form-control">
+            <input type="file" name="bilde" class="form-control">
+            @error('bilde')<div class="text-red-600 text-sm mt-1">{{ $message }}</div>@enderror
         </div>
 
         <div class="mb-3">
