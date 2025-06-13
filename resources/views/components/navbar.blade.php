@@ -1,5 +1,5 @@
-<nav class="bg-gray-200">
-    <div class="container mx-auto flex justify-center items-center space-x-6 py-4">
+<nav class="bg-gray-200 navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <div class="container mx-auto flex justify-center items-center space-x-6 py-4 d-flex justify-content-between">
         <a href="{{ route('ieraksti.index') }}" class="text-gray-700 hover:underline">Vajadzēs logo</a>
 
         <a href="{{ route('ieraksti.create') }}" class="text-gray-700 hover:underline">Izveidot ierakstu</a>
@@ -16,7 +16,6 @@
                 </button>
             </form>
         @endauth
-
         <a href="#" class="text-gray-700 hover:underline">Tavs profils</a>
     </div>
 </nav>

@@ -1,3 +1,4 @@
+@props(['title'=> ''])
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,13 +7,19 @@
     <title>{{ $title }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-    <body>
-
+    
+    <body class="">
         <x-navbar />
-        
-        <main class="container">
-            {{ $slot }}
-        </main>
+        <div class="d-flex">
+            <div class="col-md-3">
+                @include('components.sidebar')
+            </div>
+            
+            <main class="container">
+                {{ $slot }}
+            </main>
+            </div>
+        </div>
 
     </body>
 

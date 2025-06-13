@@ -5,12 +5,16 @@ use App\Http\Controllers\IerakstiController;
 use App\Http\Controllers\KomentariController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TemasController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::resource('ieraksti', IerakstiController::class);
+
+Route::get('/temas/{id}', [\App\Http\Controllers\TemasController::class, 'show'])->name('temas.show');
+
 
 Route::post('komentari', [KomentariController::class, 'store'])->name('komentari.store');
 
