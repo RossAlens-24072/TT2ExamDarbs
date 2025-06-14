@@ -5,7 +5,7 @@ use App\Http\Controllers\IerakstiController;
 use App\Http\Controllers\KomentariController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TemasController;
+use App\Http\Controllers\BalsojumiController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,3 +28,8 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // izrakstīšanās
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// balsojumi
+Route::middleware(['auth'])->group(function () {
+    Route::post('/komentars/{komentars}/vote', [BalsojumiController::class, 'vote'])->name('komentari.vote');
+});

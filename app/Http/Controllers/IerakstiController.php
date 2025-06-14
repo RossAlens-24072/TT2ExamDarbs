@@ -87,7 +87,7 @@ class IerakstiController extends Controller
         $ieraksts = Ieraksti::findOrFail($id);
         $temas = Tema::all();
 
-        if (Auth::id() !== $ieraksts->user_id) {
+        if (Auth::id() !== $ieraksts->user_id && Auth::user()->role !== 'admin') {
             abort(403, 'Jums nav atļaujas rediģēt šo ierakstu.');
         }
 
@@ -108,7 +108,7 @@ class IerakstiController extends Controller
 
     $ieraksts = Ieraksti::findOrFail($id);
 
-    if (Auth::id() !== $ieraksts->user_id) {
+    if (Auth::id() !== $ieraksts->user_id && Auth::user()->role !== 'admin') {
         abort(403, 'Jums nav atļaujas rediģēt šo ierakstu.');
     }
 

@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Komentari;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controller;
+
+
 
 class KomentariController extends Controller
 {
@@ -28,15 +32,24 @@ class KomentariController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'ieraksti_id' => 'required|exists:ieraksti,id',
             'content' => 'required|string|max:1000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:9096',
         ]);
+
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('komentari_bildes', 'public');
+        }
 
         Komentari::create([
             'ieraksti_id' => $request->ieraksti_id,
             'content' => $request->content,
-            'user_id' => 1,
+            'user_id' => Auth::id(),
+            'image_path' => $imagePath,
         ]);
 
         return redirect()->back()->with('success', 'Komentārs pievienots!');

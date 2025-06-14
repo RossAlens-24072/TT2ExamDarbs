@@ -6,13 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Balsojumi extends Model
 {
+    protected $table = 'balsojumi';
+
+    protected $fillable = ['vote_type', 'user_id', 'komentari_id'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function ieraksti()
+    public function Komentars()
     {
-        return $this->belongsTo(Ieraksti::class);
+        return $this->belongsTo(Komentari::class, 'komentari_id');
     }
 }
