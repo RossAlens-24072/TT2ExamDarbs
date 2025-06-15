@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use App\Models\Tema;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Komentari;
 
 class IerakstiController extends Controller
 {
@@ -62,6 +63,7 @@ class IerakstiController extends Controller
             'user_id' => Auth::id(),
             'bilde' => $imagePath,
         ]);
+        log_audit('ieraksts_pievienots', null, ['title' => $request->title]);
 
         return redirect()->route('ieraksti.index')->with('success', 'Ieraksts pievienots!');
     }
@@ -71,12 +73,24 @@ class IerakstiController extends Controller
      */
     public function show(string $id)
     {
-        // $ieraksts = \App\Models\Ieraksti::with(['user', 'tema', 'komentari'])->findOrFail($id);
+        $ieraksts = Ieraksti::with(['user', 'tema'])->findOrFail($id);
 
-        // return view('ieraksti.show', compact('ieraksts'));
+        $komentari = Komentari::with('user')
+            ->where('ieraksti_id', $ieraksts->id)
+            ->withCount([
+                'balsojumi as upvotes_count' => function ($query) {
+                    $query->where('vote_type', 'up');
+                },
+                'balsojumi as downvotes_count' => function ($query) {
+                    $query->where('vote_type', 'down');
+                },
+            ])
+            ->get()
+            ->sortByDesc(function ($komentars) {
+                return ($komentars->upvotes_count ?? 0) - ($komentars->downvotes_count ?? 0);
+            });
 
-        $ieraksts = Ieraksti::with(['user', 'tema', 'komentari'])->findOrFail($id);
-        return view('ieraksti.show', compact('ieraksts'));
+        return view('ieraksti.show', compact('ieraksts', 'komentari'));
     }
 
     /**
@@ -132,6 +146,8 @@ class IerakstiController extends Controller
 
     $ieraksts->update($data);
 
+    log_audit('ieraksts_rediģēts', null, ['title' => $request->title]);
+
     return redirect()->route('ieraksti.show', $ieraksts->id)->with('success', 'Ieraksts atjaunots veiksmīgi!');
 }
 
@@ -147,6 +163,8 @@ class IerakstiController extends Controller
         }
 
         $ieraksti->delete();
+
+        log_audit('ieraksts_dzēsts', $ieraksti, ['title' => $request->title]);
 
         return redirect()->route('ieraksti.index')->with('success', 'Ieraksts dzēsts!');
 

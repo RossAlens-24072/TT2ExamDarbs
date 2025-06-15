@@ -26,7 +26,7 @@
     <h2 class="mb-4">Komentāri</h2>
 
     @if ($ieraksts->komentari->count())
-        @foreach ($ieraksts->komentari as $komentars)
+        @foreach ($komentari as $komentars)
             <div class="border rounded p-3 mb-3">
                 <strong>{{ $komentars->user->name ?? 'Anonīms' }}</strong>
                 <p>{{ $komentars->content }}</p>
@@ -48,19 +48,17 @@
                     <form method="POST" action="{{ route('komentari.vote', $komentars->id) }}" class="me-1">
                         @csrf
                         <input type="hidden" name="vote_type" value="up">
-                        <button type="submit" class="btn btn-outline-success btn-sm">👍</button>
+                        <button type="submit" class="btn btn-outline-success btn-sm">⬆️</button>
                     </form>
 
                     <form method="POST" action="{{ route('komentari.vote', $komentars->id) }}" class="me-1">
                         @csrf
                         <input type="hidden" name="vote_type" value="down">
-                        <button type="submit" class="btn btn-outline-danger btn-sm">👎</button>
+                        <button type="submit" class="btn btn-outline-danger btn-sm">⬇️</button>
                     </form>
 
                     <span class="ms-2">Reitings: {{ $komentars->balsuSumma() }}</span>
                 </div>
-
-
             </div>
         @endforeach
     @else
