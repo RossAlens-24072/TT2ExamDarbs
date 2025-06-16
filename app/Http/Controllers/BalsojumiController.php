@@ -26,6 +26,8 @@ class BalsojumiController extends Controller
         ]
     
     );
+
+    log_audit('balsojums_veikts', $komentars, [ 'vote_type' => $request->vote_type, 'komentari_id' => $komentars->id]);
     return back()->with('success', 'Balsojums saglabāts!');
     }
 }

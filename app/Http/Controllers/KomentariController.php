@@ -45,12 +45,14 @@ class KomentariController extends Controller
             $imagePath = $request->file('image')->store('komentari_bildes', 'public');
         }
 
-        Komentari::create([
+        $komentars = Komentari::create([
             'ieraksti_id' => $request->ieraksti_id,
             'content' => $request->content,
             'user_id' => Auth::id(),
             'image_path' => $imagePath,
         ]);
+
+        log_audit('Komentārs_pievienots', $komentars, ['ieraksti_id' => $komentars->ieraksti_id]);
 
         return redirect()->back()->with('success', 'Komentārs pievienots!');
     }

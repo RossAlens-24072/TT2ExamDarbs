@@ -35,6 +35,8 @@ class AuthController extends Controller
 
         Auth::login($user);
 
+        log_audit('lietotājs_reģistrēts', $user, ['email' => $user->email]);
+
         return redirect()->route('ieraksti.index')->with('success', 'Reģistrācija veiksmīga!');
     }
 
@@ -50,6 +52,10 @@ class AuthController extends Controller
             return redirect()->intended(route('ieraksti.index'));
         }
 
+        $user = Auth::user();
+
+        log_audit('lietotājs_pieslēdzies', $user, ['email' => $user->email]);
+
         return back()->withErrors([
             'email' => 'Nepareizs e-pasts vai parole!',
         ])->withInput();
@@ -57,10 +63,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $user = Auth::user();
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        log_audit('lietotājs_izrakstījies', $user, ['email' => $user->email]);
 
         return redirect()->route('login')->with('success', 'Izrakstīšanās veiksmīga');
     }
