@@ -13,22 +13,22 @@
     </div>
 
     <div class="mb-3">
-        <strong>Apraksts:</strong>
+        <strong>@lang('messages.apraksts')</strong>
         {{ $ieraksts->content }}
     </div>
 
     <div class="mb-3">
-        <strong>Tēma:</strong>
+        <strong>@lang('messages.tema')</strong>
         <br>{{ $ieraksts->tema->title }}
     </div>
 
     <!-- Komentāri -->
-    <h2 class="mb-4">Komentāri</h2>
+    <h2 class="mb-4">@lang('messages.komentari')</h2>
 
     @if ($ieraksts->komentari->count())
         @foreach ($komentari as $komentars)
             <div class="border rounded p-3 mb-3">
-                <strong>{{ $komentars->user->name ?? 'Anonīms' }}</strong>
+                <strong>{{ $komentars->user->name }}</strong>
                 <p>{{ $komentars->content }}</p>
 
                 @if ($komentars->image_path)
@@ -57,18 +57,18 @@
                         <button type="submit" class="btn btn-outline-danger btn-sm">⬇️</button>
                     </form>
 
-                    <span class="ms-2">Reitings: {{ $komentars->balsuSumma() }}</span>
+                    <span class="ms-2">@lang('messages.reitings') {{ $komentars->balsuSumma() }}</span>
                 </div>
             </div>
         @endforeach
     @else
-        <p>Vēl nav komentāru.</p>
+        <p>@lang('messages.nkom')</p>
     @endif
 
     <hr>
 
     <!-- Komentāra pievienošana -->
-    <h3 class="mb-2">Pievienot komentāru</h3>
+    <h3 class="mb-2">@lang('messages.pkom')</h3>
 
     @auth
         <form method="POST" action="{{ route('komentari.store') }}" enctype="multipart/form-data">
@@ -76,29 +76,29 @@
             <input type="hidden" name="ieraksti_id" value="{{ $ieraksts->id }}">
 
             <div class="mb-3">
-                <label class="form-label">Komentārs:</label>
+                <label class="form-label">@lang('messages.kom')</label>
                 <textarea name="content" class="form-control" rows="3" required>{{ old('content') }}</textarea>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Attēls:</label>
+                <label class="form-label">@lang('messages.attels')</label>
                 <input type="file" name="image" class="form-control" accept="image/*">
             </div>
 
-            <button type="submit" class="btn btn-secondary">Pievienot komentāru</button>
+            <button type="submit" class="btn btn-secondary">@lang('messages.pkom')</button>
         </form>
     @else
-        <p>Jums jābūt pieslēgušam, lai pievienotu komentāru. <a href="{{ route('login') }}">Ienākt</a></p>
+        <p> @lang('messages.bridi')<a href="{{ route('login') }}">@lang('messages.ienakt')</a></p>
     @endauth
 
     <br>
 
     <!-- Atpakaļ -->
-    <a href="{{ route('ieraksti.index') }}" class="btn btn-primary">Atpakaļ</a>
+    <a href="{{ route('ieraksti.index') }}" class="btn btn-primary">@lang('messages.atpakal')</a>
 
     <!-- Rediģēšana -->
     @can('update', $ieraksts)
-        <a href="{{ route('ieraksti.edit', $ieraksts->id) }}" class="btn btn-primary">Rediģēt ierakstu</a>
+        <a href="{{ route('ieraksti.edit', $ieraksts->id) }}" class="btn btn-primary">@lang('messages.rediget')</a>
     @endcan
 
     <!-- Dzēšana -->
@@ -106,7 +106,7 @@
         <form action="{{ route('ieraksti.destroy', $ieraksts) }}" method="POST" class="d-inline">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-danger">Dzēst ierakstu</button>
+            <button type="submit" class="btn btn-danger">@lang('messages.dzest')</button>
         </form>
     @endcan
 </x-layout>

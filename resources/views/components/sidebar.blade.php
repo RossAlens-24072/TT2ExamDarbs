@@ -1,5 +1,5 @@
-<aside class="bg-light p-3 border-end" style="position: sticky; top: 94px; height: max-content;">
-    <h5 class="mb-3">Tēmas</h5>
+<aside class="bg-light p-3 border-end" style="position: sticky; top: 84px; height: max-content;">
+    <h5 class="mb-3">@lang('messages.temas')</h5>
     <ul class="nav flex-column">
         @foreach($temas as $tema)
             <li class="nav-item mb-2">

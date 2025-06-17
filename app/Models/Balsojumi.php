@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Balsojumi extends Model
 {
-    protected $table = 'balsojumi';
+    protected $table = 'balsojumi'; // parāda uz kuru tabulu DB attiecas
 
     protected $fillable = ['vote_type', 'user_id', 'komentari_id'];
 

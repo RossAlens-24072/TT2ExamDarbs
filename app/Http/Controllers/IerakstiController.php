@@ -16,10 +16,7 @@ class IerakstiController extends Controller
      */
     public function index()
     {
-        $ieraksti = \App\Models\Ieraksti::with(['user', 'tema'])
-        ->latest()
-        ->paginate(6); // lapošana
-
+        $ieraksti = Ieraksti::with(['user', 'tema'])->latest()->get();
         return view('ieraksti.index', compact('ieraksti'));
     }
 
@@ -167,9 +164,6 @@ class IerakstiController extends Controller
         log_audit('ieraksts_dzēsts', $ieraksti, ['title' => $request->title]);
 
         return redirect()->route('ieraksti.index')->with('success', 'Ieraksts dzēsts!');
-
-        // $ieraksti->delete();
-        // return redirect()->route('ieraksti.index')->with('success', 'Ieraksts izdzēsts');
     }
 
     public function __construct()

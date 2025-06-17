@@ -11,21 +11,6 @@ use Illuminate\Routing\Controller;
 
 class KomentariController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -55,14 +40,6 @@ class KomentariController extends Controller
         log_audit('Komentārs_pievienots', $komentars, ['ieraksti_id' => $komentars->ieraksti_id]);
 
         return redirect()->back()->with('success', 'Komentārs pievienots!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Http\Controllers\KomentariController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BalsojumiController;
+use App\Http\Controllers\LocaleController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,3 +34,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::post('/komentars/{komentars}/vote', [BalsojumiController::class, 'vote'])->name('komentari.vote');
 });
+
+// valodas izvēle
+Route::get('locale/{lang}', [LocaleController::class, 'setLocale'])->name('locale.switch');

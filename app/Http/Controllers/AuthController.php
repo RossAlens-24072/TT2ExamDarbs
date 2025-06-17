@@ -49,12 +49,10 @@ class AuthController extends Controller
 
         if(Auth::attempt($attempt)){
             $request->session()->regenerate();
+            $user = Auth::user();
+            log_audit('lietotājs_pieslēdzies', $user, ['email' => $user->email]);
             return redirect()->intended(route('ieraksti.index'));
         }
-
-        $user = Auth::user();
-
-        log_audit('lietotājs_pieslēdzies', $user, ['email' => $user->email]);
 
         return back()->withErrors([
             'email' => 'Nepareizs e-pasts vai parole!',

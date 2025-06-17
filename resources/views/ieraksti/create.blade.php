@@ -3,7 +3,7 @@
         Izveidot jaunu ierakstu
     </x-slot>
 
-    <h1 class="mb-4"> Izveidot Jaunu Ierakstu</h1>
+    <h1 class="mb-4"> @lang('messages.izv')</h1>
 
     <div class="pb-8">
         @if ($errors->any())
@@ -24,23 +24,23 @@
         @csrf
 
         <div class="mb-3">
-            <label class="form-label">Nosaukums:</label>
+            <label class="form-label">@lang('messages.nosaukums')</label>
             <input type="text" name="title" class="form-control" value="{{old('title')}}">
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Apraksts:</label>
+            <label class="form-label">@lang('messages.apraksts')</label>
             <textarea type="text" name="content" class="form-control" rows="5">{{old('content')}}</textarea>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Pievienot attēlu:</label>
+            <label class="form-label">@lang('messages.patt')</label>
             <input type="file" name="bilde" class="form-control">
             @error('bilde')<div class="text-red-600 text-sm mt-1">{{ $message }}</div>@enderror
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Izvēlēties attiecīgo tēmu:</label>
+            <label class="form-label">@lang('messages.izvt')</label>
             <select name="tema_id" class="form-select">
                 <option value="">Izvēlies Tēmu</option>
                 @foreach($temas as $tema)
@@ -51,6 +51,6 @@
             </select>
         </div>
         
-        <button type="submit" class="btn btn-primary">Izveidot Ierakstu</button>
+        <button type="submit" class="btn btn-primary">@lang('messages.izvie')</button>
     </form>
 </x-layout>
